@@ -84,22 +84,24 @@
 	
 	\vspace{1cm}
 	
-	\subsection*{Configuracion del router y subinterfaces(trunk)}
+	\subsection*{Configuracion del router y subinterfaces}
+	Los siguientes comandos convierten esa única interfaz física (G0/0) en 10 interfaces virtuales con el fin de crear las puertas de enlace de las diferentes redes.
 	\begin{itemize}
 		\item enable
 		\item configure terminal
 		\item interface gigabitEthernet0/0
 		\item no shutdown 
 		\item exit
-		\item interface gigabitEthernet0/0.10
-		\item encapsulation dot1Q 10
-		\item ip address 172.16.0.1 255.255.0.0
+		\item interface gigabitEthernet0/0.XX
+		\item encapsulation dot1Q XX
+		\item ip address 172.XX.0.1 255.255.0.0
 		\item exit
 	\end{itemize}
 	
 	\vspace{1cm}
 	
 	\subsection*{convertir el enlace entre el router y el switch central en un trunk}
+	Con los siguientes comandos en el switch central, se conectan su interfaz con el router en modo trunk (multiples vlan). 
 	\begin{itemize}
 		\item enable
 		\item configure terminal
@@ -115,10 +117,51 @@
 	\vspace{1cm}
 	
 	\subsection*{Configurar el Router (DHCP Relay)}
+	 Como el servidor que brinda DHCP se encuentra en la VLAN de Administración, para permitir que los clientes de las demás VLAN obtengan configuración IP automáticamente, se configuró la función DHCP Relay (ip helper-address) en las subinterfaces del router correspondientes a cada VLAN.
 	\begin{itemize}
-		\item interface GigabitEthernet0/0.10
+		\item interface GigabitEthernet0/0.XX
 		\item ip helper-address 172.25.0.2
 	\end{itemize}
+
+	\vspace{1cm}	
+	\subsection*{Sede Chacarita}
+	Para la sede de Chacarita se continuó utilizando el bloque de direcciones privadas 172.16.0.0/12, asignando las redes desde 172.26.0.0/16 hasta 172.31.0.0/16. De esta forma se mantiene un esquema de direccionamiento uniforme entre las sedes, evitando superposición de redes y facilitando la administración y el futuro enrutamiento entre ellas.
 	
+	\vspace{1cm}
 	
+	\begin{tabular}{c|c|c|c|c}
+		\textbf{VLAN} & \textbf{Carrera} & \textbf{Red} & \textbf{Gateway} & \textbf{Puerto en switch central}\\
+		\hline
+		10 & Informática Aplicada & 172.26.0.0/16 & 172.26.0.1 & Fa0/1\\
+		20 & Control Eléctrico & 172.27.0.0/16 & 172.27.0.1 & Fa0/2\\
+		30 & Automatización y robótica & 172.28.0.0/16 & 172.28.0.1 & Fa0/3\\
+		40 & Química aplicada & 172.29.0.0/16 & 172.29.0.1 & Fa0/4\\
+		50 & Física aplicada & 172.30.0.0/16 & 172.30.0.1 & Fa0/5\\
+		60 & Administración & 172.31.0.0/16 & 172.31.0.1 & Fa0/10\\
+	\end{tabular}
+
+
+	\vspace{1cm}	
+\subsection*{Sede Lugano}	
+Red base: 192.168.0.0/24
+Tres subredes:
+Alumnos: mínimo 100 hosts.
+$2⁷−2 = 126 hosts$
+Mascara: 255.255.255.128
+
+Administración: mínimo 50 hosts.
+$2⁶−2 = 62 hosts$
+Mascara: 255.255.255.192
+
+Dirección: mínimo 25 hosts.
+$2⁵−2 = 30 hosts$
+Mascara: 255.255.255.224
+
+\begin{tabular}{c|c|c|c|c|c}
+	\textbf{VLAN} & \textbf{Sector} & \textbf{Red} & \textbf{Primer host (gateway)} & \textbf{Mascara } & \textbf{Broadcast}\\
+	\hline
+	10 & Alumnos & 192.168.0.0/25 & 192.168.0.1 & 255.255.255.128 & 192.168.0.127\\
+	20 & Administracion & 192.168.0.128/26 & 192.168.0.129 & 255.255.255.192 & 192.168.0.191\\
+	30 & Direccion & 192.168.0.192/27 & 192.168.0.193 & 255.255.255.224 & 192.168.0.223\\
+\end{tabular}
 \end{document}
