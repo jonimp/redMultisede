@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,14pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{listings}
@@ -28,5 +28,97 @@
 	\begin{center}
 	\section*{Diseño e implementación de una red multisede}
 	\end{center}
+	
+	La topología de interconexión entre sedes fue diseñada en forma de triángulo, estableciendo un enlace WAN entre cada par de sedes. Esta disposición garantiza la conectividad requerida entre las distintas redes institucionales y proporciona un camino alternativo ante la eventual caída de alguno de los enlaces, incrementando la disponibilidad de la infraestructura.
+	
+	\vspace{1cm}
+	
+	\begin{tabular}{c|c|c|c|c}
+		\textbf{VLAN} & \textbf{Carrera} & \textbf{Red} & \textbf{Gateway} & \textbf{Puerto en switch central}\\
+		\hline
+		10 & Ingeniería Civil & 172.16.0.0/16 & 172.16.0.1 & Fa0/1\\
+		20 & Ingeniería Eléctrica & 172.17.0.0/16 & 172.17.0.1 & Fa0/2\\
+		30 & Ingeniería Electrónica & 172.18.0.0/16 & 172.18.0.1 & Fa0/3\\
+		40 & Ingeniería Industrial & 172.19.0.0/16 & 172.19.0.1 & Fa0/4\\
+		50 & Ingeniería Mecánica & 172.20.0.0/16 & 172.20.0.1 & Fa0/5\\
+		60 & Ingeniería Naval & 172.21.0.0/16 & 172.21.0.1 & Fa0/6\\
+		70 & Ingeniería Química & 172.22.0.0/16 & 172.22.0.1 & Fa0/7\\
+		80 & Ingeniería en Sistemas & 172.23.0.0/16 & 172.23.0.1 & Fa0/8\\
+		90 & Dirección & 172.24.0.0/16 & 172.24.0.1 & Fa0/9\\
+		100 & Administración & 172.25.0.0/16 & 172.25.0.1 & Fa0/10\\
+	\end{tabular}
+
+	\vspace{1cm}
+	\subsection*{Sede Almagro}
+	\subsection*{Creacion y asignacion a puertos de las VLAN en Switch central}
+	\begin{itemize}
+		\item enable
+		\item configure terminal
+		\item vlan XX
+		\item name XXXX
+		\item exit
+		\item interface faX/X
+		\item switchport mode access
+		\item switchport access vlan XX
+		\item description Conexion a Switch Civil
+		\item exit
+	\end{itemize}
+
+	\vspace{1cm}
+	
+	\subsection*{Creacion y asignacion a puertos de las VLAN en Switch de las carreras}
+	\begin{itemize}
+		\item enable
+		\item configure terminal
+		\item vlan XX
+		\item name XXXX
+		\item exit
+		\item interface fa0/24
+		\item switchport mode access
+		\item switchport access vlan XX
+		\item interface range fa0/1-2
+		\item switchport mode access
+		\item switchport access vlan XX
+		\item exit
+	\end{itemize}
+	
+	\vspace{1cm}
+	
+	\subsection*{Configuracion del router y subinterfaces(trunk)}
+	\begin{itemize}
+		\item enable
+		\item configure terminal
+		\item interface gigabitEthernet0/0
+		\item no shutdown 
+		\item exit
+		\item interface gigabitEthernet0/0.10
+		\item encapsulation dot1Q 10
+		\item ip address 172.16.0.1 255.255.0.0
+		\item exit
+	\end{itemize}
+	
+	\vspace{1cm}
+	
+	\subsection*{convertir el enlace entre el router y el switch central en un trunk}
+	\begin{itemize}
+		\item enable
+		\item configure terminal
+		\item interface gigabitEthernet0/1
+		\item switchport mode trunk
+		\item switchport trunk allowed vlan 10,20,30,40,50,60,70,80,90,100
+		\item description Enlace al Router Almagro
+		\item no shutdown 
+		\item exit
+	\end{itemize}
+	
+	
+	\vspace{1cm}
+	
+	\subsection*{Configurar el Router (DHCP Relay)}
+	\begin{itemize}
+		\item interface GigabitEthernet0/0.10
+		\item ip helper-address 172.25.0.2
+	\end{itemize}
+	
 	
 \end{document}
