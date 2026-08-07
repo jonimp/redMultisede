@@ -207,4 +207,13 @@ router rip \\
 version 2 \\
 no auto-summary \\
 network ....
+
+Crear la ACL \\
+enable
+configure terminal
+ip access-list extended ADMIN-ALMAGRO \\
+permit ip 172.25.0.0 0.0.255.255 172.31.0.0 0.0.255.255 \\
+exit \\
+interface GigabitEthernet0/0.100 \\
+ip access-group ADMIN-ALMAGRO in \\
 \end{document}
