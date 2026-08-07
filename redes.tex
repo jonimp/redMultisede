@@ -1,4 +1,4 @@
-\documentclass[a4paper,14pt]{article}
+\documentclass[a4paper,16pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{listings}
@@ -141,21 +141,28 @@
 	\end{tabular}
 
 
-	\vspace{1cm}	
-\subsection*{Sede Lugano}	
-Red base: 192.168.0.0/24
-Tres subredes:
-Alumnos: mínimo 100 hosts.
-$2⁷−2 = 126 hosts$
-Mascara: 255.255.255.128
+\vspace{1cm}	
+\subsection*{Sede Lugano}
 
-Administración: mínimo 50 hosts.
-$2⁶−2 = 62 hosts$
-Mascara: 255.255.255.192
+\textbf{Red base para las tres subredes: 192.168.0.0/24}\\
 
-Dirección: mínimo 25 hosts.
-$2⁵−2 = 30 hosts$
-Mascara: 255.255.255.224
+\noindent % Quita la sangría del inicio de este bloque
+\begin{tabbing}
+	\textbf{Alumnos:} \= mínimo 100 hosts. \kill % Esta línea invisible define los topes de tabulación
+	\textbf{Alumnos:} \\ \> mínimo 100 hosts. \\
+	\> $2^7 - 2 = 126$ hosts. \\
+	\> Máscara: 255.255.255.128 \\\vspace*{0.5cm} % Añade el espacio vertical de forma limpia
+	
+	\textbf{Administración:} \\ \> mínimo 50 hosts. \\
+	\> $2^6 - 2 = 62$ hosts. \\
+	\> Máscara: 255.255.255.192 \\\vspace*{0.5cm}
+	
+	\textbf{Dirección:} \\ \> mínimo 25 hosts. \\
+	\> $2^5 - 2 = 30$ hosts. \\
+	\> Máscara: 255.255.255.224
+\end{tabbing}
+
+\vspace{1cm}	
 
 \begin{tabular}{c|c|c|c|c|c}
 	\textbf{VLAN} & \textbf{Sector} & \textbf{Red} & \textbf{Primer host (gateway)} & \textbf{Mascara } & \textbf{Broadcast}\\
@@ -164,4 +171,38 @@ Mascara: 255.255.255.224
 	20 & Administracion & 192.168.0.128/26 & 192.168.0.129 & 255.255.255.192 & 192.168.0.191\\
 	30 & Direccion & 192.168.0.192/27 & 192.168.0.193 & 255.255.255.224 & 192.168.0.223\\
 \end{tabular}
+
+\vspace{1cm}
+\subsection*{Enlaces WAN}
+\vspace{0.5cm}
+\begin{tabular}{c|c|c|c|c}
+	\textbf{ Enlace } & \textbf{ Red } & \textbf{ Router A } & \textbf{ Router B } & \textbf{ Máscara }\\
+	\hline
+	Almagro - Chacarita & 10.0.0.0/30 & 10.0.0.1 & 10.0.0.2 & 255.255.255.252\\
+	Lugano - Almagro & 10.0.0.4/30 & 10.0.0.5 & 10.0.0.6 & 255.255.255.252\\
+	Chacarita - Lugano & 10.0.0.8/30 & 10.0.0.9 & 10.0.0.10 & 255.255.255.252\\
+\end{tabular}
+
+\vspace{1cm}
+Configurar los relojes (clock rate) en el extremo DCE\\
+enable \\
+configure terminal \\
+interface serial0/3/0 \\
+clock rate 64000 \\
+no shutdown
+
+En el otro extremo del cable Serial (DCT): \\
+interface serial0/3/1 \\
+no shutdown \\
+
+Asignación de las IP a los routers: \\
+
+
+Configurar RIPv2 a los routers \\
+enable \\
+configure terminal \\
+router rip \\
+version 2 \\
+no auto-summary \\
+
 \end{document}
