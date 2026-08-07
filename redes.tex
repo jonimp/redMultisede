@@ -196,7 +196,9 @@ interface serial0/3/1 \\
 no shutdown \\
 
 Asignación de las IP a los routers: \\
-
+interface serial0/3/0 \\
+ip address 10.0.0.1 255.255.255.252 \\
+no shutdown \\
 
 Configurar RIPv2 a los routers \\
 enable \\
@@ -204,5 +206,5 @@ configure terminal \\
 router rip \\
 version 2 \\
 no auto-summary \\
-
+network ....
 \end{document}
